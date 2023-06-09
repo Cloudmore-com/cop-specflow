@@ -1,4 +1,5 @@
 using System.Text.Json;
+using COPSpecFlowNUnit.Clients;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
@@ -10,41 +11,18 @@ public class SellerAdministratorsStepDefinitions: PlaywrightTest
 {
     
     private readonly ScenarioContext _scenarioContext;
-    private IAPIRequestContext Request = null;
-    
-    private readonly string _apiSellerAdminUrl =
-        "https://api-staging.cloudmore.com/api/sellers/01ebab7a-e130-e245-92a3-c0cafc8dc63e/selleradministrators";
-
+    private ApiClient _apiClient;
 
     public SellerAdministratorsStepDefinitions(ScenarioContext scenarioContext)
     {
         _scenarioContext = scenarioContext;
+        _apiClient = new ApiClient(_scenarioContext);
     }
 
     [When(@"Micheal sends valid information to create seller admin for Gridheart")]
     public async Task WhenMichealSendsValidInformationToCreateSellerAdminForGridheart()
     {
-        JsonElement hostAdminAuth = _scenarioContext.Get<JsonElement>("HostAdminAuth");
-        var accessToken = hostAdminAuth.GetProperty("access_token").GetString();
-        var validSellerAdminData = GetSellerAdminValidData();
-
-        var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        var requestContext = await playwright.APIRequest.NewContextAsync(new()
-        {
-            BaseURL = _apiSellerAdminUrl,
-            ExtraHTTPHeaders = new Dictionary<string, string>()
-            {
-                { "accept", "application/json" },
-                { "Authorization", "Bearer " + accessToken },
-                { "Content-Type", "application/json" }
-            }
-        });
-
-        var response = await requestContext.PostAsync(url: _apiSellerAdminUrl, new APIRequestContextOptions()
-        {
-            DataObject = validSellerAdminData
-        });
-        
+        var response = await _apiClient.PostSellerAdmin(resellerAdminData: GetSellerAdminValidData());
         _scenarioContext.Add("PostResellerAdminResponse", response);
     }
 
