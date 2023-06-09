@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright;
 
@@ -13,6 +14,9 @@ public class ApiHook: PlaywrightTest
     
     private static readonly string ApiUrl = "https://api-staging.cloudmore.com";
     private static readonly string ApiAuthUrl = ApiUrl + "/connect/token";
+    private readonly string _apiSellerAdminUrl =
+        "https://api-staging.cloudmore.com/api/sellers/01ebab7a-e130-e245-92a3-c0cafc8dc63e/selleradministrators";
+
     
     public ApiHook(ScenarioContext scenarioContext)
     {
@@ -60,8 +64,24 @@ public class ApiHook: PlaywrightTest
     }
 
     [AfterScenario]
-    public void AfterScenario()
+    public async Task AfterScenario()
     {
         //TODO: implement logic that has to run after executing each scenario
+        JsonElement hostAdminAuth = _scenarioContext.Get<JsonElement>("HostAdminAuth");
+        var accessToken = hostAdminAuth.GetProperty("access_token").GetString();
+        var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
+        var requestContext = await playwright.APIRequest.NewContextAsync(new()
+        {
+            BaseURL = _apiSellerAdminUrl,
+            ExtraHTTPHeaders = new Dictionary<string, string>()
+            {
+                { "accept", "application/json" },
+                { "Authorization", "Bearer " + accessToken },
+                { "Content-Type", "application/json" }
+            }
+        });
+        var response = _scenarioContext.Get<IAPIResponse>("PostResellerAdminResponse");
+        response.Headers.TryGetValue("location", out string? deleteResellerAdminUrl);
+        if (deleteResellerAdminUrl != null) await requestContext.DeleteAsync(url: deleteResellerAdminUrl);
     }
 }
