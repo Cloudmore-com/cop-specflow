@@ -18,14 +18,19 @@ public class ApiHook
         _apiClient = new ApiClient(_scenarioContext);
     }
 
-    [BeforeScenario]
+    [BeforeScenario(tags:"CopApi")]
     public async Task BeforeScenario()
     {
         var responseJsonResponse = await _apiClient.ConnectToken(ApiConstants.HostAdminUsername, ApiConstants.HostAdminPassword);
-        _scenarioContext.Add("HostAdminAuth", responseJsonResponse);
+        _scenarioContext.Add(ScenarioContextKeys.MichealAuthKey, responseJsonResponse);
+        var markTokenResponse = await _apiClient.ConnectToken(ApiConstants.MarkUsername, ApiConstants.MarkPassword);
+        _scenarioContext.Add(ScenarioContextKeys.MarkAuthKey, markTokenResponse);
+        var allisterTokenResponse = await _apiClient.ConnectToken(ApiConstants.AllisterUsername, ApiConstants.AllisterPassword);
+        _scenarioContext.Add(ScenarioContextKeys.AllisterAuthKey, allisterTokenResponse);
     }
 
     [AfterScenario]
+    [Scope(Tag = "CopApi")]
     public async Task AfterScenario()
     {
         //TODO: implement logic that has to run after executing each scenario
@@ -34,9 +39,9 @@ public class ApiHook
         if (locationUrl != null)
         {
             string[] splitedLocation = locationUrl.Split("/");
-            await _apiClient.DeleteResellerAdmin(resellerAdminId: splitedLocation[7]);
+            // it is for cleaning environment from the test data, so it auth key might be host admin.
+            // It is not related with the test scenario.
+            await _apiClient.DeleteResellerAdmin(resellerAdminId: splitedLocation[7], ScenarioContextKeys.MichealAuthKey);
         }
-        
-        
     }
 }

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using COPSpecFlowNUnit.Clients;
+using COPSpecFlowNUnit.Constants;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
@@ -22,7 +23,7 @@ public class SellerAdministratorsStepDefinitions: PlaywrightTest
     [When(@"Micheal sends valid information to create seller admin for Gridheart")]
     public async Task WhenMichealSendsValidInformationToCreateSellerAdminForGridheart()
     {
-        var response = await _apiClient.PostSellerAdmin(resellerAdminData: GetSellerAdminValidData());
+        var response = await _apiClient.PostSellerAdmin(resellerAdminData: GetSellerAdminValidData(), ScenarioContextKeys.MichealAuthKey);
         _scenarioContext.Add("PostResellerAdminResponse", response);
     }
 
@@ -54,5 +55,36 @@ public class SellerAdministratorsStepDefinitions: PlaywrightTest
         validSellerAdminData.Add("cellPhonePrefix", "372");
         validSellerAdminData.Add("address", validAddressData);
         return validSellerAdminData;
+    }
+
+    [Given(@"Mark has granted access to use API")]
+    public void GivenMarkHasGrantedAccessToUseApi()
+    {
+        //TODO: be sure that Mark has granted access. do nothing for now.
+    }
+
+    [When(@"Mark sends valid information to create seller admin for Gridheart")]
+    public async Task WhenMarkSendsValidInformationToCreateSellerAdminForGridheart()
+    {
+        var response = await _apiClient.PostSellerAdmin(resellerAdminData: GetSellerAdminValidData(), ScenarioContextKeys.MarkAuthKey);
+        _scenarioContext.Add("PostResellerAdminResponse", response);
+    }
+
+    [Given(@"Allister has no granted access to use API")]
+    public void GivenAllisterHasNoGrantedAccessToUseApi()
+    {
+        ScenarioContext.StepIsPending();
+    }
+
+    [When(@"Allister sends valid information to create seller admin for Gridheart")]
+    public void WhenAllisterSendsValidInformationToCreateSellerAdminForGridheart()
+    {
+        ScenarioContext.StepIsPending();
+    }
+
+    [Then(@"Seller administrator is not created for Gridheart")]
+    public void ThenSellerAdministratorIsNotCreatedForGridheart()
+    {
+        ScenarioContext.StepIsPending();
     }
 }

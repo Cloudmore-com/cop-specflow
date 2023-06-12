@@ -11,5 +11,8 @@ public static class ApiConstants
     public const string Scope = "api";
     public const string HostAdminUsername = "adm_boris.tsarjov@domain01.net";
     public const string HostAdminPassword = "MB49!cP#8xP3";
-
+    public const string MarkUsername = "183auto_data_20230608_144314417029_box@testsellercloudmore.com";
+    public const string MarkPassword = "aE_iLmJOs$f0";
+    public const string AllisterUsername = "244auto_data_20230608_144314417029_box@testsellercloudmore.com";
+    public const string AllisterPassword = "aE_iLmJOs$f0";
 }

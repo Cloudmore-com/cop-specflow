@@ -1,6 +1,7 @@
 using System.Text.Json;
 using COPSpecFlowNUnit.Constants;
 using Microsoft.Playwright;
+using Microsoft.Playwright.NUnit;
 
 namespace COPSpecFlowNUnit.Clients;
 
@@ -52,17 +53,17 @@ public class ApiClient
         return responseJsonResponse;
     }
 
-    private string? GetSellerAdminToken()
+    private string? GetSellerAdminToken(string scenarioContextKey)
     {
-        JsonElement hostAdminAuth = _scenarioContext.Get<JsonElement>("HostAdminAuth");
+        JsonElement hostAdminAuth = _scenarioContext.Get<JsonElement>(scenarioContextKey);
         var accessToken = hostAdminAuth.GetProperty("access_token").GetString();
         return accessToken;
     }
 
     
-    public async Task<IAPIResponse> PostSellerAdmin(Dictionary<string, object> resellerAdminData)
+    public async Task<IAPIResponse> PostSellerAdmin(Dictionary<string, object> resellerAdminData, string scenarioContextKey)
     {
-        var token = GetSellerAdminToken();
+        var token = GetSellerAdminToken(scenarioContextKey);
         var url = ApiConstants.BaseUrl + ApiConstants.SellerAdminUrl;
         var requestContext = await CreateApiRequestContext(headers: new Dictionary<string, string>()
         {
@@ -76,9 +77,9 @@ public class ApiClient
         });
     }
 
-    public async Task<IAPIResponse> DeleteResellerAdmin(string resellerAdminId)
+    public async Task<IAPIResponse> DeleteResellerAdmin(string resellerAdminId, string scenarioContextKey)
     {
-        var token = GetSellerAdminToken();
+        var token = GetSellerAdminToken(scenarioContextKey);
         var url = ApiConstants.BaseUrl + ApiConstants.SellerAdminUrl + "/" + resellerAdminId; 
         var requestContext = await CreateApiRequestContext(headers: new Dictionary<string, string>()
         {
