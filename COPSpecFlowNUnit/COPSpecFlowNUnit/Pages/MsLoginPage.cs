@@ -28,4 +28,9 @@ public class MsLoginPage : BasePage
     {
         await Page.GetByText("Sign in").ClickAsync();
     }
+
+    public async Task ClickStaySignedYesButton()
+    {
+        await Page.GetByText("Yes").ClickAsync();
+    }
 }

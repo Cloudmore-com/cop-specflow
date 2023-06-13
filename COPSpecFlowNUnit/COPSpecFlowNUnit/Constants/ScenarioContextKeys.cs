@@ -7,6 +7,7 @@ public class ScenarioContextKeys
     public const string AllisterAuthKey = "AllisterAuth";
     public const string PageKey = "page";
     public const string LoginPageKey = "LoginPage";
-    public const string MSLoginPageKey = "MSLoginPage";
+    public const string MsLoginPageKey = "MSLoginPage";
+    public const string DashboardPageKey = "DashboardPage";
 
 }

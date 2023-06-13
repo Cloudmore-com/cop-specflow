@@ -39,9 +39,10 @@ public sealed class UiHook
         _scenarioContext.Add(ScenarioContextKeys.PageKey, page);
         var msLoginPage = new MsLoginPage(page);
         var loginPage = new LoginPage(page);
+        var dashBoardPage = new DashboardPage(page);
         _scenarioContext.Add(ScenarioContextKeys.LoginPageKey, loginPage);
-        _scenarioContext.Add(ScenarioContextKeys.MSLoginPageKey, msLoginPage);
-
+        _scenarioContext.Add(ScenarioContextKeys.MsLoginPageKey, msLoginPage);
+        _scenarioContext.Add(ScenarioContextKeys.DashboardPageKey, dashBoardPage);
     }
 
     [AfterScenario]

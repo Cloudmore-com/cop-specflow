@@ -1,6 +1,6 @@
 Feature: Single Sing On Login in Cloudmore portal
 
-# SSO User		: Niklas
+# SSO Broker User		: Niklas
 	 		
 
 @CopUI

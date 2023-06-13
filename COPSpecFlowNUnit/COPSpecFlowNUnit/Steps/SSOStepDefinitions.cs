@@ -1,5 +1,7 @@
 using COPSpecFlowNUnit.Constants;
 using COPSpecFlowNUnit.Pages;
+using Microsoft.Playwright;
+using NUnit.Framework;
 
 namespace COPSpecFlowNUnit;
 
@@ -25,16 +27,19 @@ public class SSOStepDefinitions
     [When(@"Niklas submits his microsoft credentials to Microsoft")]
     public async Task WhenNiklasSubmitsHisMicrosoftCredentialsToMicrosoft()
     {
-        var msLoginPage = _scenarioContext.Get<MsLoginPage>(ScenarioContextKeys.MSLoginPageKey);
+        var msLoginPage = _scenarioContext.Get<MsLoginPage>(ScenarioContextKeys.MsLoginPageKey);
         await msLoginPage.FillEmail(UiConstants.SsoUsername);
         await msLoginPage.ClickNextButton();
         await msLoginPage.FillPassword(UiConstants.SsoPassword);
         await msLoginPage.ClickSignInButton();
+        await msLoginPage.ClickStaySignedYesButton();
     }
 
     [Then(@"Niklas is authenticated successfully to Cloudmore portal")]
-    public void ThenNiklasIsAuthenticatedSuccessfullyToCloudmorePortal()
+    public async Task ThenNiklasIsAuthenticatedSuccessfullyToCloudmorePortal()
     {
-        ScenarioContext.StepIsPending();
+        var dashboardPage = _scenarioContext.Get<DashboardPage>(ScenarioContextKeys.DashboardPageKey);
+        var actualProfileName = await dashboardPage.GetProfileName();
+        Assert.That(actualProfileName, Is.EqualTo(UiConstants.SsoProfileName));
     }
 }
